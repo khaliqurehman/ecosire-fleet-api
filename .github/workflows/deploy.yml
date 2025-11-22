@@ -28,7 +28,7 @@ jobs:
 
           sudo bash -c '
 
-          ADDONS_DIR="/var/lib/docker/volumes/webapp-backend_odoo_addons/_data/ecosire-fleet-api"
+          ADDONS_DIR="/var/lib/docker/volumes/webapp-backend_odoo_addons/_data/ecosire_fleet_api"
           REPO="https://github.com/khaliqurehman/ecosire-fleet-api.git"
           BACKEND_DIR="/home/khaliq/webapp-backend"
           TMP_DIR="/tmp/ecosire-fleet-api"
@@ -47,8 +47,8 @@ jobs:
 
           echo ">>> Restarting docker compose"
           cd "$BACKEND_DIR"
-          docker-compose down || true
-          docker-compose up -d --build
+          docker-compose down
+          docker-compose up -d
 
           echo ">>> Deployment completed."
 
