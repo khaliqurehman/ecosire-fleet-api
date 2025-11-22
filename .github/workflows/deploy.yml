@@ -28,7 +28,7 @@ jobs:
 
           # --- CONFIG ---
           ADDONS_DIR="/var/lib/docker/volumes/webapp-backend_odoo_addons/_data/ecosire-fleet-api"
-          REPO="git@github.com:YOUR_USER/YOUR_REPO.git"
+          REPO="git@github.com:khaliqurehman/ecosire-fleet-api.git"
           BRANCH="master"
           BACKEND_DIR="/home/khaliq/webapp-backend"
           # ---------------
