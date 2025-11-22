@@ -22,27 +22,40 @@ jobs:
         run: |
           ssh-keyscan -H 156.244.10.228 >> ~/.ssh/known_hosts
 
-      - name: Deploy application
+      - name: Deploy to server
         run: |
           ssh khaliq@156.244.10.228 << 'EOF'
-          
-          # Directory inside docker volume
+
+          # --- CONFIG ---
           ADDONS_DIR="/var/lib/docker/volumes/webapp-backend_odoo_addons/_data/ecosire-fleet-api"
+          REPO="git@github.com:YOUR_USER/YOUR_REPO.git"
+          BRANCH="master"
+          BACKEND_DIR="/home/khaliq/webapp-backend"
+          # ---------------
 
-          sudo mkdir -p $ADDONS_DIR
+          echo ">>> Fixing volume directory access"
+          sudo mkdir -p \$ADDONS_DIR
+          sudo chown -R \$USER:\$USER \$ADDONS_DIR
 
-          cd $ADDONS_DIR
+          cd \$ADDONS_DIR
 
-          # IF directory empty, clone — else pull
-          if [ -z "$(ls -A $ADDONS_DIR)" ]; then
-            sudo git clone https://github.com/khaliqurehman/ecosire-fleet-api.git .
+          echo ">>> Checking if repo exists..."
+          if [ ! -d ".git" ]; then
+              echo ">>> No repo found. Initializing first-time setup..."
+              git init
+              git remote add origin \$REPO
+              git fetch origin \$BRANCH
+              git checkout -b \$BRANCH origin/\$BRANCH
           else
-            sudo git pull
+              echo ">>> Repo exists. Pulling latest changes..."
+              git pull origin \$BRANCH
           fi
 
-          # Restart docker-compose app
-          cd /home/khaliq/webapp-backend
+          echo ">>> Restarting docker compose"
+          cd \$BACKEND_DIR
           sudo docker-compose down
           sudo docker-compose up -d --build
+
+          echo ">>> Deployment finished successfully."
 
           EOF
