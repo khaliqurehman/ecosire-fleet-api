@@ -21,6 +21,7 @@ jobs:
       - name: Add server to known hosts
         run: |
           ssh-keyscan -H 156.244.10.228 >> ~/.ssh/known_hosts
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 
       - name: Deploy to server
         run: |
@@ -29,7 +30,7 @@ jobs:
           sudo bash -c '
 
           ADDONS_DIR="/var/lib/docker/volumes/webapp-backend_odoo_addons/_data/ecosire-fleet-api"
-          REPO="https://github.com/khaliqurehman/ecosire-fleet-api.git"
+          REPO="git@github.com:khaliqurehman/ecosire-fleet-api.git"
           BACKEND_DIR="/home/khaliq/webapp-backend"
 
           echo ">>> Switching to root environment"
@@ -58,7 +59,7 @@ jobs:
           docker-compose down || true
           docker-compose up -d --build
 
-          echo ">>> Deployment completed (root mode)."
+          echo ">>> Deployment completed."
 
           '
 
