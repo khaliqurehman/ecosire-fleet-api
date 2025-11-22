@@ -21,7 +21,6 @@ jobs:
       - name: Add server to known hosts
         run: |
           ssh-keyscan -H 156.244.10.228 >> ~/.ssh/known_hosts
-          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 
       - name: Deploy to server
         run: |
@@ -30,29 +29,21 @@ jobs:
           sudo bash -c '
 
           ADDONS_DIR="/var/lib/docker/volumes/webapp-backend_odoo_addons/_data/ecosire-fleet-api"
-          REPO="git@github.com:khaliqurehman/ecosire-fleet-api.git"
+          REPO="https://github.com/khaliqurehman/ecosire-fleet-api.git"
           BACKEND_DIR="/home/khaliq/webapp-backend"
 
           echo ">>> Switching to root environment"
           cd /
 
-          echo ">>> Creating addons directory if not exists"
-          mkdir -p "$ADDONS_DIR"
+          echo ">>> Cleaning addons directory"
+          rm -rf "$ADDONS_DIR"/*
 
-          echo ">>> Moving into addons directory"
-          cd "$ADDONS_DIR"
+          echo ">>> Cloning fresh copy from GitHub"
+          git clone "$REPO" "$ADDONS_DIR"
 
-          echo ">>> Checking git repository"
-          if [ ! -d ".git" ]; then
-              echo ">>> No .git found — doing first time clone"
-              git init
-              git remote add origin "$REPO"
-              git fetch origin master
-              git checkout -b master origin/master
-          else
-              echo ">>> Repo exists — pulling latest changes"
-              git pull origin master
-          fi
+          echo ">>> Removing unwanted folders"
+          rm -rf "$ADDONS_DIR/.github"
+          find "$ADDONS_DIR" -type d -name "__pycache__" -exec rm -rf {} +
 
           echo ">>> Restarting docker compose"
           cd "$BACKEND_DIR"
