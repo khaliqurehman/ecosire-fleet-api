@@ -26,36 +26,34 @@ jobs:
         run: |
           ssh khaliq@156.244.10.228 << 'EOF'
 
-          # --- CONFIG ---
           ADDONS_DIR="/var/lib/docker/volumes/webapp-backend_odoo_addons/_data/ecosire-fleet-api"
           REPO="git@github.com:khaliqurehman/ecosire-fleet-api.git"
           BRANCH="master"
           BACKEND_DIR="/home/khaliq/webapp-backend"
-          # ---------------
 
-          echo ">>> Fixing volume directory access"
-          sudo mkdir -p \$ADDONS_DIR
-          sudo chown -R \$USER:\$USER \$ADDONS_DIR
+          echo ">>> Ensure directory exists (sudo + correct owner)"
+          sudo mkdir -p "$ADDONS_DIR"
+          sudo chown -R khaliq:khaliq "$ADDONS_DIR"
 
-          cd \$ADDONS_DIR
+          cd "$ADDONS_DIR"
 
-          echo ">>> Checking if repo exists..."
+          echo ">>> Checking repository"
           if [ ! -d ".git" ]; then
-              echo ">>> No repo found. Initializing first-time setup..."
-              git init
-              git remote add origin \$REPO
-              git fetch origin \$BRANCH
-              git checkout -b \$BRANCH origin/\$BRANCH
+              echo ">>> No repo found — doing first-time clone"
+              sudo -u khaliq git init
+              sudo -u khaliq git remote add origin "$REPO"
+              sudo -u khaliq git fetch origin "$BRANCH"
+              sudo -u khaliq git checkout -b "$BRANCH" origin/"$BRANCH"
           else
-              echo ">>> Repo exists. Pulling latest changes..."
-              git pull origin \$BRANCH
+              echo ">>> Repo exists — pulling latest changes"
+              sudo -u khaliq git pull origin "$BRANCH"
           fi
 
-          echo ">>> Restarting docker compose"
-          cd \$BACKEND_DIR
-          sudo docker-compose down
+          echo ">>> Restarting docker compose properly"
+          cd "$BACKEND_DIR"
+          sudo docker-compose down || true
           sudo docker-compose up -d --build
 
-          echo ">>> Deployment finished successfully."
+          echo ">>> Deployment completed"
 
           EOF
