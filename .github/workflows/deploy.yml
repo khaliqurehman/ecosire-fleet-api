@@ -26,34 +26,40 @@ jobs:
         run: |
           ssh khaliq@156.244.10.228 << 'EOF'
 
+          sudo bash -c '
+
           ADDONS_DIR="/var/lib/docker/volumes/webapp-backend_odoo_addons/_data/ecosire-fleet-api"
-          REPO="git@github.com:khaliqurehman/ecosire-fleet-api.git"
-          BRANCH="master"
+          REPO="https://github.com/khaliqurehman/ecosire-fleet-api.git"
           BACKEND_DIR="/home/khaliq/webapp-backend"
 
-          echo ">>> Ensure directory exists (sudo + correct owner)"
-          sudo mkdir -p "$ADDONS_DIR"
-          sudo chown -R khaliq:khaliq "$ADDONS_DIR"
+          echo ">>> Switching to root environment"
+          cd /
 
+          echo ">>> Creating addons directory if not exists"
+          mkdir -p "$ADDONS_DIR"
+
+          echo ">>> Moving into addons directory"
           cd "$ADDONS_DIR"
 
-          echo ">>> Checking repository"
+          echo ">>> Checking git repository"
           if [ ! -d ".git" ]; then
-              echo ">>> No repo found — doing first-time clone"
-              sudo -u khaliq git init
-              sudo -u khaliq git remote add origin "$REPO"
-              sudo -u khaliq git fetch origin "$BRANCH"
-              sudo -u khaliq git checkout -b "$BRANCH" origin/"$BRANCH"
+              echo ">>> No .git found — doing first time clone"
+              git init
+              git remote add origin "$REPO"
+              git fetch origin master
+              git checkout -b master origin/master
           else
               echo ">>> Repo exists — pulling latest changes"
-              sudo -u khaliq git pull origin "$BRANCH"
+              git pull origin master
           fi
 
-          echo ">>> Restarting docker compose properly"
+          echo ">>> Restarting docker compose"
           cd "$BACKEND_DIR"
-          sudo docker-compose down || true
-          sudo docker-compose up -d --build
+          docker-compose down || true
+          docker-compose up -d --build
 
-          echo ">>> Deployment completed"
+          echo ">>> Deployment completed (root mode)."
+
+          '
 
           EOF
