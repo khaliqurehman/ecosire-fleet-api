@@ -19,12 +19,17 @@
             </field>
         </record>
 
-        <!-- Inherit Sale Order Form View to add Cost Reference tab -->
+        <!-- Inherit Sale Order Form View to add Cost Reference tab and remove Customer Signature -->
         <record id="view_order_form_inherit_fleet_cost_reference" model="ir.ui.view">
             <field name="name">sale.order.form.inherit.fleet.cost.reference</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
+                <!-- Hide/Remove Customer Signature tab if it exists -->
+                <xpath expr="//page[@name='customer_signature']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                
                 <!-- Add the Cost Reference tab after the order_lines page -->
                 <xpath expr="//page[@name='order_lines']" position="after">
                     <page string="Cost Reference" name="cost_reference" invisible="not fleet_order_id">
