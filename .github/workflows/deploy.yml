@@ -31,19 +31,19 @@ jobs:
           ADDONS_DIR="/var/lib/docker/volumes/webapp-backend_odoo_addons/_data/ecosire-fleet-api"
           REPO="https://github.com/khaliqurehman/ecosire-fleet-api.git"
           BACKEND_DIR="/home/khaliq/webapp-backend"
+          TMP_DIR="/tmp/ecosire-fleet-api"
 
-          echo ">>> Switching to root environment"
-          cd /
+          echo ">>> Cleaning temporary folder"
+          rm -rf "$TMP_DIR"
 
-          echo ">>> Cleaning addons directory"
-          rm -rf "$ADDONS_DIR"/*
+          echo ">>> Cloning fresh copy into temp folder"
+          git clone "$REPO" "$TMP_DIR"
 
-          echo ">>> Cloning fresh copy from GitHub"
-          git clone "$REPO" "$ADDONS_DIR"
+          echo ">>> Copying files into addons directory (excluding .github & __pycache__)"
+          rsync -av --delete --exclude '.github' --exclude '__pycache__' "$TMP_DIR/" "$ADDONS_DIR/"
 
-          echo ">>> Removing unwanted folders"
-          rm -rf "$ADDONS_DIR/.github"
-          find "$ADDONS_DIR" -type d -name "__pycache__" -exec rm -rf {} +
+          echo ">>> Removing temporary folder"
+          rm -rf "$TMP_DIR"
 
           echo ">>> Restarting docker compose"
           cd "$BACKEND_DIR"
