@@ -2,12 +2,12 @@
 <odoo>
     <data>
         
-        <!-- Create a dedicated tree view for fleet cost lines when viewed from sales order -->
-        <record id="view_fleet_cost_line_tree_readonly" model="ir.ui.view">
-            <field name="name">ecosire.fleet.order.cost.line.tree.readonly</field>
+        <!-- Create a dedicated list view for fleet cost lines when viewed from sales order -->
+        <record id="view_fleet_cost_line_list_readonly" model="ir.ui.view">
+            <field name="name">ecosire.fleet.order.cost.line.list.readonly</field>
             <field name="model">ecosire.fleet.order.cost.line</field>
             <field name="arch" type="xml">
-                <tree create="false" edit="false" delete="false" decoration-muted="True">
+                <list create="false" edit="false" delete="false" decoration-muted="True">
                     <field name="product_id"/>
                     <field name="name"/>
                     <field name="quantity"/>
@@ -15,7 +15,7 @@
                     <field name="tax_ids" widget="many2many_tags"/>
                     <field name="price_subtotal"/>
                     <field name="price_total"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -35,7 +35,7 @@
                         </group>
                         <separator string="Cost Lines from Fleet Order"/>
                         <field name="fleet_cost_line_ids" nolabel="1" 
-                               context="{'tree_view_ref': 'ecosire_fleet_api.view_fleet_cost_line_tree_readonly'}"/>
+                               context="{'tree_view_ref': 'ecosire_fleet_api.view_fleet_cost_line_list_readonly'}"/>
                         <group class="oe_subtotal_footer oe_right">
                             <div class="alert alert-info" role="alert" style="margin-top: 10px;">
                                 <strong>Note:</strong> These cost lines are read-only references from the Fleet Order. 
