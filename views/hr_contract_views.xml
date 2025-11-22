@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Inherit the HR Contract form view to add Other Allowances field -->
+        <record id="view_hr_contract_form_inherit_other_allowances" model="ir.ui.view">
+            <field name="name">hr.contract.form.inherit.other.allowances</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+                <!-- Add Other Allowances field after wage field -->
+                <xpath expr="//field[@name='wage']" position="after">
+                    <field name="x_studio_other_allowances" 
+                           placeholder="e.g., Transport, Housing, Mobile, etc."/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Inherit the HR Contract tree view to show Other Allowances -->
+        <record id="view_hr_contract_tree_inherit_other_allowances" model="ir.ui.view">
+            <field name="name">hr.contract.tree.inherit.other.allowances</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_tree"/>
+            <field name="arch" type="xml">
+                <!-- Add Other Allowances column after wage -->
+                <xpath expr="//field[@name='wage']" position="after">
+                    <field name="x_studio_other_allowances" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Inherit the HR Contract search view to add search capability -->
+        <record id="view_hr_contract_search_inherit_other_allowances" model="ir.ui.view">
+            <field name="name">hr.contract.search.inherit.other.allowances</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_search"/>
+            <field name="arch" type="xml">
+                <!-- Add search field for Other Allowances -->
+                <xpath expr="//field[@name='employee_id']" position="after">
+                    <field name="x_studio_other_allowances"/>
+                </xpath>
+                
+                <!-- Add filter for contracts with other allowances -->
+                <xpath expr="//search" position="inside">
+                    <separator/>
+                    <filter string="Has Other Allowances" 
+                            name="has_other_allowances"
+                            domain="[('x_studio_other_allowances', '!=', False)]"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

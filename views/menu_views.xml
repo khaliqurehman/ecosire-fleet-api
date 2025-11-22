@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Fleet API Menu -->
+        <menuitem id="menu_fleet_api_root" 
+                  name="Fleet API" 
+                  parent="contacts.menu_contacts" 
+                  sequence="10"/>
+        
+        <!-- Driver Action -->
+        <record id="action_drivers" model="ir.actions.act_window">
+            <field name="name">Drivers</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('contact_type', '=', 'driver')]</field>
+            <field name="context">{'default_contact_type': 'driver'}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first driver contact!
+                </p>
+                <p>
+                    Drivers are contacts with special license information for fleet management.
+                </p>
+            </field>
+        </record>
+
+        <!-- Drivers Menu -->
+        <menuitem id="menu_drivers" 
+                  name="Drivers" 
+                  parent="menu_fleet_api_root" 
+                  action="action_drivers" 
+                  sequence="10"/>
+        
+        <!-- Fleet Companies Action -->
+        <record id="action_fleet_companies" model="ir.actions.act_window">
+            <field name="name">Fleet Companies</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('contact_type', '=', 'company')]</field>
+            <field name="context">{'default_contact_type': 'company'}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first fleet company!
+                </p>
+                <p>
+                    Fleet companies are business entities that manage vehicle fleets.
+                </p>
+            </field>
+        </record>
+
+        <!-- Fleet Companies Menu -->
+        <menuitem id="menu_fleet_companies" 
+                  name="Fleet Companies" 
+                  parent="menu_fleet_api_root" 
+                  action="action_fleet_companies" 
+                  sequence="20"/>
+
+        <!-- Orders Menu under Fleet (above Contracts) -->
+        <menuitem id="menu_ecosire_fleet_order" name="Orders"
+                  parent="fleet.menu_root" action="action_ecosire_fleet_order"
+                  sequence="25"/>
+
+    </data>
+</odoo>

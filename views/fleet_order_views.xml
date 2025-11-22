@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="view_ecosire_fleet_order_tree" model="ir.ui.view">
+            <field name="name">ecosire.fleet.order.tree</field>
+            <field name="model">ecosire.fleet.order</field>
+            <field name="arch" type="xml">
+                <list string="Orders">
+                    <field name="order_no"/>
+                    <field name="order_type"/>
+                    <field name="cargo_type"/>
+                    <field name="customer_id"/>
+                    <field name="driver_id"/>
+                    <field name="vehicle_id"/>
+                    <field name="status"/>
+                    <button name="action_open_form" type="object" string="View Details" class="oe_highlight"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_ecosire_fleet_order_search" model="ir.ui.view">
+            <field name="name">ecosire.fleet.order.search</field>
+            <field name="model">ecosire.fleet.order</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="order_no"/>
+                    <field name="customer_id"/>
+                    <field name="driver_id"/>
+                    <field name="vehicle_id"/>
+                    <filter name="status_created" string="Created" domain="[('status','=','created')]"/>
+                    <filter name="status_enroute" string="Enroute" domain="[('status','=','enroute')]"/>
+                    <filter name="status_completed" string="Completed" domain="[('status','=','completed')]"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_status" string="Status" context="{'group_by': 'status'}"/>
+                        <filter name="group_customer" string="Customer" context="{'group_by': 'customer_id'}"/>
+                        <filter name="group_vehicle" string="Vehicle" context="{'group_by': 'vehicle_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_ecosire_fleet_order_form" model="ir.ui.view">
+            <field name="name">ecosire.fleet.order.form</field>
+            <field name="model">ecosire.fleet.order</field>
+            <field name="arch" type="xml">
+                <form string="Order">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_sale_orders" type="object" class="oe_stat_button" icon="fa-shopping-cart" string="Sales Orders" invisible="not sale_order_ids"/>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="order_no" readonly="1"/>
+                                <field name="status"/>
+                                <field name="order_type"/>
+                                <field name="cargo_type"/>
+                                <field name="delivery_type"/>
+                                <field name="expected_delivery_date"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                            <group>
+                                <field name="customer_id"/>
+                                <field name="driver_id"/>
+                                <field name="vehicle_id"/>
+                                <field name="external_order_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Cargo">
+                                <group>
+                                    <field name="cargo_size"/>
+                                    <field name="container_number"/>
+                                </group>
+                                <group>
+                                    <field name="container_weight"/>
+                                    <field name="bulk_weight"/>
+                                </group>
+                            </page>
+                            <page string="Location">
+                                <!-- Pickup Location -->
+                                <group string="Pickup Location" col="4">
+                                    <field name="pickup_location_lat"/>
+                                    <field name="pickup_location_lng"/>
+                                    <field name="pickup_location_city_new"/>
+                                    <field name="pickup_location_address"/>
+                                </group>
+
+                                <!-- Drop-off Location -->
+                                <group string="Drop-off Location" col="4">
+                                    <field name="drop_off_location_lat"/>
+                                    <field name="drop_off_location_lng"/>
+                                    <field name="drop_off_location_city_new"/>
+                                    <field name="drop_off_location_address"/>
+                                </group>
+
+                                <!-- Empty Dropoff Location -->
+                                <group string="Empty Dropoff Location" col="4">
+                                    <field name="empty_dropoff_location_lat"/>
+                                    <field name="empty_dropoff_location_lng"/>
+                                    <field name="empty_dropoff_location_city_new"/>
+                                    <field name="empty_dropoff_location_address"/>
+                                    <field name="empty_dropoff_location_name"/>
+                                    <field name="empty_dropoff_location_phone"/>
+                                </group>
+
+                                <!-- Yard Dropoff -->
+                                <group string="Yard Dropoff Location" col="4">
+                                    <field name="yard_dropoff_location_lat"/>
+                                    <field name="yard_dropoff_location_lng"/>
+                                    <field name="yard_dropoff_location_city_new"/>
+                                    <field name="yard_dropoff_location_address"/>
+                                </group>
+                            </page>
+                            <page string="Documents">
+                                <group>
+                                    <field name="proof_of_delivery"/>
+                                    <field name="proof_of_delivery_sign" widget="json"/>
+                                    <field name="proof_empty_container_return"/>
+                                </group>
+                            </page>
+                            <page string="Logistics">
+                                <group>
+                                    <field name="waybill_id"/>
+                                    <field name="bayan_trip_id"/>
+                                </group>
+                                <group>
+                                    <field name="bill_of_lading_number"/>
+                                    <field name="bayan_number"/>
+                                </group>
+                                <group>
+                                    <field name="last_date_container_return"/>
+                                </group>
+                            </page>
+                            <page string="Payment Terms">
+                                <group col="4">
+                                    <field name="payment_method"/>
+                                    <field name="is_tradable"/>
+                                    <field name="fare"/>
+                                    <field name="paid_by_sender"/>
+                                </group>
+                            </page>
+                            <page string="Item">
+                                <field name="line_ids" context="{'default_order_id': id}">
+                                    <list editable="bottom">
+                                        <field name="unit"/>
+                                        <field name="quantity"/>
+                                        <field name="price"/>
+                                        <field name="good_type"/>
+                                        <field name="weight"/>
+                                    </list>
+                                    <form>
+                                        <group col="2">
+                                            <field name="unit"/>
+                                            <field name="quantity"/>
+                                            <field name="price"/>
+                                            <field name="good_type"/>
+                                            <field name="weight"/>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Cost">
+                                <field name="cost_line_ids" context="{'default_order_id': id}">
+                                    <list editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="name"/>
+                                        <field name="quantity"/>
+                                        <field name="price_unit"/>
+                                        <field name="tax_ids" widget="many2many_tags"/>
+                                        <field name="price_subtotal" readonly="1"/>
+                                        <field name="price_total" readonly="1"/>
+                                    </list>
+                                    <form>
+                                        <group>
+                                            <field name="product_id"/>
+                                            <field name="name"/>
+                                            <field name="quantity"/>
+                                            <field name="price_unit"/>
+                                            <field name="tax_ids" widget="many2many_tags"/>
+                                            <field name="price_subtotal" readonly="1"/>
+                                            <field name="price_total" readonly="1"/>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Notes">
+                                <field name="notes"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action and Menu (action declared here; menu in menu_views.xml) -->
+        <record id="action_ecosire_fleet_order" model="ir.actions.act_window">
+            <field name="name">Orders</field>
+            <field name="res_model">ecosire.fleet.order</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="view_ecosire_fleet_order_search"/>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">Create your first fleet order</p>
+            </field>
+        </record>
+    </data>
+</odoo>
+
+

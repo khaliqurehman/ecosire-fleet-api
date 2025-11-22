@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ecosire_fleet_order_user,access.ecosire.fleet.order.user,model_ecosire_fleet_order,base.group_user,1,0,0,0
+access_ecosire_fleet_order_system,access.ecosire.fleet.order.system,model_ecosire_fleet_order,base.group_system,1,1,1,1
+access_ecosire_fleet_order_line_user,access.ecosire.fleet.order.line.user,model_ecosire_fleet_order_line,base.group_user,1,0,0,0
+access_ecosire_fleet_order_line_system,access.ecosire.fleet.order.line.system,model_ecosire_fleet_order_line,base.group_system,1,1,1,1
+access_ecosire_fleet_order_cost_line_user,access.ecosire.fleet.order.cost.line.user,model_ecosire_fleet_order_cost_line,base.group_user,1,1,1,1
+access_ecosire_fleet_order_cost_line_system,access.ecosire.fleet.order.cost.line.system,model_ecosire_fleet_order_cost_line,base.group_system,1,1,1,1

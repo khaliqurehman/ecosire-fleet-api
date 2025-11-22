@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Create a dedicated list view for fleet cost lines when viewed from sales order -->
+        <record id="view_fleet_cost_line_list_readonly" model="ir.ui.view">
+            <field name="name">ecosire.fleet.order.cost.line.list.readonly</field>
+            <field name="model">ecosire.fleet.order.cost.line</field>
+            <field name="arch" type="xml">
+                <list create="false" edit="false" delete="false" decoration-muted="True">
+                    <field name="product_id"/>
+                    <field name="name"/>
+                    <field name="quantity"/>
+                    <field name="price_unit"/>
+                    <field name="tax_ids" widget="many2many_tags"/>
+                    <field name="price_subtotal"/>
+                    <field name="price_total"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Inherit Sale Order Form View to add Cost Reference tab -->
+        <record id="view_order_form_inherit_fleet_cost_reference" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit.fleet.cost.reference</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <!-- Add the Cost Reference tab after Customer Signature tab -->
+                <xpath expr="//page[@name='customer_signature']" position="after">
+                    <page string="Cost Reference" name="cost_reference" invisible="not fleet_order_id">
+                        <group>
+                            <group>
+                                <field name="fleet_order_id" readonly="1" string="Related Fleet Order"/>
+                            </group>
+                        </group>
+                        <separator string="Cost Lines from Fleet Order"/>
+                        <field name="fleet_cost_line_ids" nolabel="1" 
+                               context="{'tree_view_ref': 'ecosire_fleet_api.view_fleet_cost_line_list_readonly'}"/>
+                        <group class="oe_subtotal_footer oe_right">
+                            <div class="alert alert-info" role="alert" style="margin-top: 10px;">
+                                <strong>Note:</strong> These cost lines are read-only references from the Fleet Order. 
+                                They were used to create the order lines in this sales order.
+                            </div>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

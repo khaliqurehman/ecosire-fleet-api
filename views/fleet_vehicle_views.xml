@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Inherit the main fleet vehicle form view to add Saudi plate fields -->
+        <record id="view_fleet_vehicle_form_inherit_ecosire_fleet_api" model="ir.ui.view">
+            <field name="name">fleet.vehicle.form.inherit.ecosire.fleet.api</field>
+            <field name="model">fleet.vehicle</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+            <field name="arch" type="xml">
+                <!-- Change the label of category field to "Vehicle Type" -->
+                <xpath expr="//field[@name='category_id']" position="attributes">
+                    <attribute name="string">Vehicle Type</attribute>
+                </xpath>
+                
+                <!-- Add vehicle category field after model_id -->
+                <xpath expr="//field[@name='model_id']" position="after">
+                    <field name="vehicle_category"/>
+                </xpath>
+                
+                <!-- Add Saudi plate structure fields and document details in dedicated sections -->
+                <xpath expr="//form/sheet/notebook" position="inside">
+                    <!-- Saudi Plate Information Tab -->
+                    <page string="Saudi Plate Information" name="saudi_plate_info">
+                        <group string="Plate Structure" col="2">
+                            <field name="plate_type_id" placeholder="e.g. 2"/>
+                            <field name="formatted_plate" readonly="1" optional="hide"/>
+                        </group>
+                        <group string="Plate Components" col="4">
+                            <field name="plate_right_letter" placeholder="أ"/>
+                            <field name="plate_middle_letter" placeholder="ص"/>
+                            <field name="plate_left_letter" placeholder="د"/>
+                            <field name="plate_number" placeholder="1280"/>
+                        </group>
+                    </page>
+
+                    <!-- Istimara Details Tab -->
+                    <page string="Istimara Details" name="istimara_details">
+                        <group string="Vehicle Registration (Istimara)" col="2">
+                            <group>
+                                <field name="x_studio_istimara_serial_number" 
+                                       placeholder="Enter serial number"/>
+                                <field name="x_studio_istimara_start_date_1"/>
+                            </group>
+                            <group>
+                                <field name="x_studio_istimara_expiry_date" 
+                                       widget="remaining_days"
+                                       class="oe_inline"/>
+                            </group>
+                        </group>
+                    </page>
+
+                    <!-- Insurance Details Tab -->
+                    <page string="Insurance Details" name="insurance_details">
+                        <group string="Vehicle Insurance Information" col="2">
+                            <group>
+                                <field name="x_studio_insurance_type" 
+                                       placeholder="e.g., Comprehensive, Third Party"/>
+                                <field name="x_studio_insurance_number" 
+                                       placeholder="Policy number"/>
+                                <field name="x_studio_insurance_start_date_1"/>
+                            </group>
+                            <group>
+                                <field name="x_studio_insurance_expiry_date" 
+                                       widget="remaining_days"
+                                       class="oe_inline"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Inherit the fleet vehicle tree view to show new fields -->
+        <record id="view_fleet_vehicle_tree_inherit_ecosire_fleet_api" model="ir.ui.view">
+            <field name="name">fleet.vehicle.tree.inherit.ecosire.fleet.api</field>
+            <field name="model">fleet.vehicle</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_view_tree"/>
+            <field name="arch" type="xml">
+                <!-- Add vehicle category column -->
+                <xpath expr="//field[@name='model_id']" position="after">
+                    <field name="vehicle_category" optional="hide"/>
+                    <field name="formatted_plate" optional="hide"/>
+                </xpath>
+                <!-- Add document expiry columns -->
+                <xpath expr="//field[@name='driver_id']" position="after">
+                    <field name="x_studio_istimara_expiry_date" optional="hide"/>
+                    <field name="x_studio_insurance_expiry_date" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Inherit the fleet vehicle search view to add search filters -->
+        <record id="view_fleet_vehicle_search_inherit_ecosire_fleet_api" model="ir.ui.view">
+            <field name="name">fleet.vehicle.search.inherit.ecosire.fleet.api</field>
+            <field name="model">fleet.vehicle</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_view_search"/>
+            <field name="arch" type="xml">
+                <!-- Add search fields for new fields -->
+                <xpath expr="//field[@name='license_plate']" position="after">
+                    <field name="vehicle_category"/>
+                    <field name="plate_type_id"/>
+                    <field name="formatted_plate"/>
+                    <field name="x_studio_istimara_serial_number"/>
+                    <field name="x_studio_insurance_number"/>
+                </xpath>
+                
+                <!-- Add filters for vehicle categories and document expiry -->
+                <xpath expr="//search" position="inside">
+                    <separator/>
+                    <filter string="Sedan" name="sedan" domain="[('vehicle_category', '=', 'sedan')]"/>
+                    <filter string="SUV" name="suv" domain="[('vehicle_category', '=', 'suv')]"/>
+                    <filter string="Truck" name="truck" domain="[('vehicle_category', '=', 'truck')]"/>
+                    <filter string="Van" name="van" domain="[('vehicle_category', '=', 'van')]"/>
+                    <filter string="Dyna" name="dyna" domain="[('vehicle_category', '=', 'dyna')]"/>
+                    <separator/>
+                    <filter string="Has Saudi Plate" name="has_saudi_plate"
+                            domain="[('plate_right_letter', '!=', False), ('plate_middle_letter', '!=', False), ('plate_left_letter', '!=', False), ('plate_number', '!=', False)]"/>
+                    <separator/>
+                    <filter string="Istimara Expiring Soon" name="istimara_expiring"
+                            domain="[('x_studio_istimara_expiry_date', '&lt;=', (context_today() + relativedelta(days=30)).strftime('%Y-%m-%d')), ('x_studio_istimara_expiry_date', '&gt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Istimara Expired" name="istimara_expired"
+                            domain="[('x_studio_istimara_expiry_date', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <separator/>
+                    <filter string="Insurance Expiring Soon" name="insurance_expiring"
+                            domain="[('x_studio_insurance_expiry_date', '&lt;=', (context_today() + relativedelta(days=30)).strftime('%Y-%m-%d')), ('x_studio_insurance_expiry_date', '&gt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Insurance Expired" name="insurance_expired"
+                            domain="[('x_studio_insurance_expiry_date', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Vehicle Category" name="group_vehicle_category" context="{'group_by': 'vehicle_category'}"/>
+                        <filter string="Insurance Type" name="group_insurance_type" context="{'group_by': 'x_studio_insurance_type'}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+    
+    <!-- Smart button on Vehicle to open related Orders -->
+    <data>
+        <record id="fleet_vehicle_form_inherit_ecosire_orders" model="ir.ui.view">
+            <field name="name">fleet.vehicle.form.inherit.ecosire.orders</field>
+            <field name="model">fleet.vehicle</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet//div[@name='button_box']" position="inside">
+                    <button class="oe_stat_button" type="action" icon="fa-list"
+                            name="%(action_ecosire_fleet_order)d"
+                            context="{'search_default_vehicle_id': id, 'default_vehicle_id': id}">
+                        <span>Orders</span>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

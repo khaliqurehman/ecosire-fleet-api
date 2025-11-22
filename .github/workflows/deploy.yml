@@ -1,0 +1,48 @@
+name: Deploy to Ubuntu Server
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server to known hosts
+        run: |
+          ssh-keyscan -H 156.244.10.228 >> ~/.ssh/known_hosts
+
+      - name: Deploy application
+        run: |
+          ssh khaliq@156.244.10.228 << 'EOF'
+          
+          # Directory inside docker volume
+          ADDONS_DIR="/var/lib/docker/volumes/webapp-backend_odoo_addons/_data/ecosire-fleet-api"
+
+          sudo mkdir -p $ADDONS_DIR
+
+          cd $ADDONS_DIR
+
+          # IF directory empty, clone — else pull
+          if [ -z "$(ls -A $ADDONS_DIR)" ]; then
+            sudo git clone https://github.com/khaliqurehman/ecosire-fleet-api.git .
+          else
+            sudo git pull
+          fi
+
+          # Restart docker-compose app
+          cd /home/khaliq/webapp-backend
+          sudo docker-compose down
+          sudo docker-compose up -d --build
+
+          EOF

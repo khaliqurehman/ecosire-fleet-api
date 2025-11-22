@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherit HR Employee form view to hide fields in Private Information tab -->
+        <record id="view_hr_employee_form_inherit_ecosire_fleet_api" model="ir.ui.view">
+            <field name="name">hr.employee.form.inherit.ecosire.fleet.api</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <!-- Hide private_street2 in Private Address section -->
+                <xpath expr="//page[@name='personal_information']//field[@name='private_street2']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <!-- Hide private_zip in Private Address section -->
+                <xpath expr="//page[@name='personal_information']//field[@name='private_zip']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <!-- Hide private_state_id in Private Address section -->
+                <xpath expr="//page[@name='personal_information']//field[@name='private_state_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

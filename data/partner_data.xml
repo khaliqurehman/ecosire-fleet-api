@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Demo Driver Contacts -->
+        <record id="demo_driver_1" model="res.partner">
+            <field name="name">John Smith</field>
+            <field name="contact_type">driver</field>
+            <field name="email">john.smith@example.com</field>
+            <field name="phone">+1-555-0101</field>
+            <field name="mobile">+1-555-0102</field>
+            <field name="street">123 Main Street</field>
+            <field name="city">New York</field>
+            <field name="zip">10001</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="state_id" ref="base.state_us_2"/>
+            <field name="driver_license_number">DL123456789</field>
+            <field name="driver_license_class">class_b</field>
+            <field name="driver_license_expiry">2025-12-31</field>
+            <field name="iqama_number">1234567890</field>
+            <field name="issue_number">ISS123456</field>
+            <field name="partner_latitude">40.7128</field>
+            <field name="partner_longitude">-74.0060</field>
+        </record>
+
+        <record id="demo_driver_2" model="res.partner">
+            <field name="name">Sarah Johnson</field>
+            <field name="contact_type">driver</field>
+            <field name="email">sarah.johnson@example.com</field>
+            <field name="phone">+1-555-0201</field>
+            <field name="mobile">+1-555-0202</field>
+            <field name="street">456 Oak Avenue</field>
+            <field name="city">Los Angeles</field>
+            <field name="zip">90210</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="state_id" ref="base.state_us_5"/>
+            <field name="driver_license_number">DL987654321</field>
+            <field name="driver_license_class">commercial</field>
+            <field name="driver_license_expiry">2024-06-15</field>
+            <field name="iqama_number">9876543210</field>
+            <field name="issue_number">ISS789012</field>
+            <field name="partner_latitude">34.0522</field>
+            <field name="partner_longitude">-118.2437</field>
+        </record>
+
+        <record id="demo_driver_3" model="res.partner">
+            <field name="name">Mike Wilson</field>
+            <field name="contact_type">driver</field>
+            <field name="email">mike.wilson@example.com</field>
+            <field name="phone">+1-555-0301</field>
+            <field name="mobile">+1-555-0302</field>
+            <field name="street">789 Pine Street</field>
+            <field name="city">Chicago</field>
+            <field name="zip">60601</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="state_id" ref="base.state_us_14"/>
+            <field name="driver_license_number">DL456789123</field>
+            <field name="driver_license_class">class_a</field>
+            <field name="driver_license_expiry">2025-03-20</field>
+            <field name="iqama_number">4567891230</field>
+            <field name="issue_number">ISS345678</field>
+            <field name="partner_latitude">41.8781</field>
+            <field name="partner_longitude">-87.6298</field>
+        </record>
+
+        <!-- Demo Company Contact -->
+        <record id="demo_company_1" model="res.partner">
+            <field name="name">Fleet Management Corp</field>
+            <field name="contact_type">company</field>
+            <field name="email">info@fleetmanagement.com</field>
+            <field name="phone">+1-555-1000</field>
+            <field name="street">100 Business Plaza</field>
+            <field name="city">Miami</field>
+            <field name="zip">33101</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="state_id" ref="base.state_us_9"/>
+            <field name="commercial_registration">CR123456789</field>
+            <field name="partner_latitude">25.7617</field>
+            <field name="partner_longitude">-80.1918</field>
+        </record>
+
+    </data>
+</odoo>
