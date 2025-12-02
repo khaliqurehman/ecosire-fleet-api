@@ -5,3 +5,4 @@ from . import fleet_vehicle
 from . import fleet_order
 from . import hr_contract
 from . import sale_inherit
+from . import account_move_inherit

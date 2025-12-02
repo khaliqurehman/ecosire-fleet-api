@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Inherit Invoice Form View to show External Order ID -->
+        <record id="view_move_form_inherit_external_order_id" model="ir.ui.view">
+            <field name="name">account.move.form.inherit.external.order.id</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <!-- Place external ID next to invoice origin in the header -->
+                <xpath expr="//field[@name='invoice_origin']" position="after">
+                    <field name="external_order_id" string="External ID"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
+
+

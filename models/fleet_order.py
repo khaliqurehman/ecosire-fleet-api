@@ -159,22 +159,20 @@ class EcosireFleetOrder(models.Model):
     def _create_sale_order_from_cost_lines(self):
         self.ensure_one()
         SaleOrder = self.env["sale.order"]
-        # We no longer need SaleOrderLine env here
         
-        # Create the Sale Order Header ONLY
+        # Create the Sale Order Header ONLY (no order lines here)
         sale = SaleOrder.create(
             {
                 "partner_id": self.customer_id.id,
                 "company_id": self.company_id.id,
                 "origin": self.order_no,
                 "fleet_order_id": self.id,
+                "external_order_id": self.external_order_id,
             }
         )
         
-        # The loop that created sale.order.line records has been removed.
-        # The 'Order Lines' tab in the Sale Order will now be empty.
-
-        # Confirm order (this will result in a confirmed order with $0.00 amount)
+        # Confirm order (this will result in a confirmed order with $0.00 amount initially)
+        # Order lines will be added via API when invoice expenses are added
         sale.action_confirm()
         return sale
 
