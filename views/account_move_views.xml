@@ -8,7 +8,7 @@
             <field name="model">account.move</field>
             <field name="inherit_id" ref="account.view_move_form"/>
             <field name="arch" type="xml">
-                <!-- Place external ID ok next to invoice origin in the header -->
+                <!-- Place external ID next to invoice origin in the header -->
                 <xpath expr="//field[@name='invoice_origin']" position="after">
                     <field name="external_order_id" string="External ID"/>
                 </xpath>

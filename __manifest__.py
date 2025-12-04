@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'ECOSIRE Fleet API',
-    'version': '18.0.2.0.0',
+    'version': '18.0.2.2.0',
     'category': 'Fleet',
     'summary': 'ECOSIRE Fleet Management API Integration',
     'description': """

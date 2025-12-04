@@ -42,8 +42,13 @@ class AccountMove(models.Model):
         Uses the standard account invoice report.
         """
         self.ensure_one()
-        report = self.env.ref("account.account_invoices")
-        pdf_content, _ = report._render_qweb_pdf(self.ids)
+        # Use the generic report service with the new signature that expects the
+        # report reference (xmlid or report_name) separately from the record ids.
+        # For customer invoices we use the standard account invoice report.
+        report_service = self.env["ir.actions.report"]
+        pdf_content, _ = report_service._render_qweb_pdf(
+            "account.account_invoices", self.ids
+        )
         return pdf_content
 
     def _ecosire_upload_invoice_pdf(self):
