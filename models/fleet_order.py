@@ -147,20 +147,21 @@ class EcosireFleetOrder(models.Model):
         }
 
     def write(self, vals):
-        creating_sale_after = False
+        creating_quotation_after = False
         if vals.get("status") == "completed":
-            creating_sale_after = True
+            creating_quotation_after = True
         result = super().write(vals)
-        if creating_sale_after:
+        if creating_quotation_after:
             for order in self:
-                order._create_sale_order_from_cost_lines()
+                order._create_quotation_from_cost_lines()
         return result
 
-    def _create_sale_order_from_cost_lines(self):
+    def _create_quotation_from_cost_lines(self):
+        """Create a quotation (draft sale order) when fleet order is completed"""
         self.ensure_one()
         SaleOrder = self.env["sale.order"]
         
-        # Create the Sale Order Header ONLY (no order lines here)
+        # Create the Sale Order in draft state (Quotation)
         sale = SaleOrder.create(
             {
                 "partner_id": self.customer_id.id,
@@ -168,12 +169,12 @@ class EcosireFleetOrder(models.Model):
                 "origin": self.order_no,
                 "fleet_order_id": self.id,
                 "external_order_id": self.external_order_id,
+                # state will be 'draft' by default - this is a quotation
             }
         )
         
-        # Confirm order (this will result in a confirmed order with $0.00 amount initially)
-        # Order lines will be added via API when invoice expenses are added
-        sale.action_confirm()
+        # DO NOT confirm the order - leave it as a quotation (draft state)
+        # Order lines can be added via API later, and user can confirm manually
         return sale
 
     def action_view_sale_orders(self):
