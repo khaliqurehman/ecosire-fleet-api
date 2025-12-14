@@ -14,7 +14,7 @@ class EcosireFleetOrder(models.Model):
     )
 
     order_no = fields.Char(
-        string="Order No", required=True, copy=False, index=True, readonly=True, default="/"
+        string="Order No", required=True, copy=False, index=True, readonly=False, default="/"
     )
     external_order_id = fields.Char(string="External ID", index=True)
 
@@ -132,8 +132,10 @@ class EcosireFleetOrder(models.Model):
 
     @api.model
     def create(self, vals):
-        if vals.get("order_no", "/") in (False, "/", ""):
-            vals["order_no"] = (self.env["ir.sequence"].next_by_code("ecosire.fleet.order.seq") or "/")
+        if not vals.get("order_no") or vals.get("order_no") in (False, "/", ""):
+            vals["order_no"] = (
+                self.env["ir.sequence"].next_by_code("ecosire.fleet.order.seq") or "/"
+            )
         return super().create(vals)
 
     def action_open_form(self):

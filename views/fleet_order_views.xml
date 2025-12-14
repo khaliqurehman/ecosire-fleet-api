@@ -52,17 +52,17 @@
                         <div class="oe_button_box" name="button_box">
                             <button name="action_view_sale_orders" type="object" class="oe_stat_button" icon="fa-shopping-cart" string="Sales Orders" invisible="not sale_order_ids"/>
                         </div>
-                        <group>
-                            <group>
-                                <field name="order_no" readonly="1"/>
-                                <field name="status"/>
-                                <field name="order_type"/>
-                                <field name="cargo_type"/>
-                                <field name="delivery_type"/>
-                                <field name="expected_delivery_date"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
-                            </group>
-                            <group>
+                <group>
+                    <group>
+                        <field name="order_no" readonly="id"/>
+                        <field name="status"/>
+                        <field name="order_type"/>
+                        <field name="cargo_type"/>
+                        <field name="delivery_type"/>
+                        <field name="expected_delivery_date"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <group>
                                 <field name="customer_id"/>
                                 <field name="driver_id"/>
                                 <field name="vehicle_id"/>
